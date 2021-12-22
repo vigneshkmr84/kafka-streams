@@ -15,6 +15,19 @@ public class Movies {
     String cast;
 
 
+    public Movies(int imdbID, String title, int year, String runTime, String genre, String releasedYear, String director, double imdbRating, String awards, String cast) {
+        this.imdbID = imdbID;
+        this.title = title;
+        this.year = year;
+        this.runTime = runTime;
+        this.genre = genre;
+        this.releasedYear = releasedYear;
+        this.director = director;
+        this.imdbRating = imdbRating;
+        this.awards = awards;
+        this.cast = cast;
+    }
+
     @Override
     public String toString() {
         return "Movies Dump Data - {" +
@@ -108,19 +121,6 @@ public class Movies {
     }
 
     public void setCast(String cast) {
-        this.cast = cast;
-    }
-
-    public Movies(int imdbID, String title, int year, String runTime, String genre, String releasedYear, String director, double imdbRating, String awards, String cast) {
-        this.imdbID = imdbID;
-        this.title = title;
-        this.year = year;
-        this.runTime = runTime;
-        this.genre = genre;
-        this.releasedYear = releasedYear;
-        this.director = director;
-        this.imdbRating = imdbRating;
-        this.awards = awards;
         this.cast = cast;
     }
 }

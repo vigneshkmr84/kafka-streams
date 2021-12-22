@@ -20,7 +20,7 @@ public class MoviesController {
     Environment environment;
 
     @PostMapping("/insert")
-    public ResponseEntity<String> insert(@RequestBody Movies movie){
+    public ResponseEntity<String> insert(@RequestBody Movies movie) {
 
         String producerTopic = environment.getProperty("kafka.producer-topic");
         log.info("Inserting movie - " + movie.toString());
@@ -31,7 +31,7 @@ public class MoviesController {
     }
 
     @GetMapping("/health")
-    public ResponseEntity<String> health(){
+    public ResponseEntity<String> health() {
         log.info("Health OK");
         return ResponseEntity.ok().body("OK");
     }
