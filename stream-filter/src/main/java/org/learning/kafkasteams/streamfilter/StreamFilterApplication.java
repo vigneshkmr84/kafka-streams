@@ -6,8 +6,8 @@ import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.EnableKafkaStreams;
 
 @SpringBootApplication
-//@EnableKafkaStreams
-@EnableKafka
+@EnableKafkaStreams
+//@EnableKafka
 public class StreamFilterApplication {
 
 	public static void main(String[] args) {

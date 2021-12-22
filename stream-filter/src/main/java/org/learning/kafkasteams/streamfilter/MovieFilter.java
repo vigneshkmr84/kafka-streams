@@ -11,7 +11,7 @@ import org.springframework.kafka.config.KafkaStreamsConfiguration;
 import java.util.Map;
 import java.util.function.Function;
 
-@Configuration
+//@Configuration
 @Slf4j
 public class MovieFilter {
 
@@ -27,7 +27,7 @@ public class MovieFilter {
         return new KafkaStreamsConfiguration(streamsProperties);
     }*/
 
-    @Bean
+    //@Bean
     public Function<KStream<String, String>, KStream<String, String>> movieFilterBean(){
 
         return kStream -> kStream.filter( (key, jsonMovie) ->{
