@@ -1,7 +1,6 @@
 package org.learning.kafkasteams.producerapi;
 
 import lombok.extern.slf4j.Slf4j;
-import org.apache.kafka.clients.producer.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.support.SendResult;
@@ -12,14 +11,13 @@ import org.springframework.util.concurrent.ListenableFuture;
 @Slf4j
 public class KafkaProducerService {
 
+    JsonParser parser = new JsonParser();
     @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
 
-    JsonParser parser = new JsonParser();
-
     /**
      * @param key       Kafka Key - movie name
-     * @param movie   Movie Object (Value)
+     * @param movie     Movie Object (Value)
      * @param topicName Topic Name to insert messages to
      */
     public void sendMessage(String key, Movies movie, String topicName) {
