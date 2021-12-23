@@ -23,7 +23,7 @@ public class StreamConsumer {
     @Autowired
     public void process(StreamsBuilder builder) {
 
-        final String inputTopic = environment.getProperty("kafka.stream.topic");
+        final String inputTopic = environment.getProperty("kafka.stream.topic1");
         final Serde<String> stringSerde = Serdes.String();
         final Serde<Long> longSerde = Serdes.Long();
         final Serde<Integer> integerSerde = Serdes.Integer();
@@ -34,7 +34,7 @@ public class StreamConsumer {
         kStream.filter((key, jsonMovie) -> {
             Movies movie = parser.parse(jsonMovie);
 
-            log.info("Movie [" + movie.getTitle() + "] is a good movie");
+            log.info("Stream Consumer : [" + movie.getTitle() + "] is a good movie");
             log.info(movie.toString());
 
             /*if (movie.getImdbRating() >= 7) {
