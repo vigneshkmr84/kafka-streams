@@ -1,10 +1,13 @@
 # Kafka Stream Consumer Service
 
----
-
 ### Description
 
-This service will consumer the movies that are being filtered as part of the steam (as good & bad movies)
+This will showcase both the methods of stream consumption.  
+1. Using normal Kafka Consumption ( ``` @Listener ``` method) - I have consumed messages from ***bad-movies*** topic in this way
+2. Consumption again as Stream itself (``` @Autowired StreamsBuilder``` ) - ***good-movies*** topics are consumed with this pattern
+
+
+The above can be split into two different services, but I wanted to try out how it looks if same service is being used (sometimes we might need this scenario)
 
 #### Sample JSON Data
 
