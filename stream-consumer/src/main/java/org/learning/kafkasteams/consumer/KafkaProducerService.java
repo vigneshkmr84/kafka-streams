@@ -1,4 +1,4 @@
-package org.learning.kafkasteams.producerapi;
+package org.learning.kafkasteams.consumer;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

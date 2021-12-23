@@ -4,6 +4,8 @@
 !**/src/main/**/target/
 !**/src/test/**/target/
 
+!**/.idea/
+
 **/src/main/resources/
 
 *.idea/
