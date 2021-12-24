@@ -38,26 +38,36 @@ public class AggregatorConfiguration {
         KStream<String, String> kStream = builder.stream(inputTopic, Consumed.with(stringSerde, stringSerde));
         //KStream<String, Movies> kStream = builder.stream(inputTopic, Consumed.with(stringSerde, movieSerde));
 
-        KGroupedStream<String, String> kStream1 = kStream.groupBy( (k, v) -> {
+        KGroupedStream<String, String> directorMoviesCount = kStream.groupBy( (k, v) -> {
             // converting the json movie data to movie object and using (returning) the director as the key
             Movies m = parser.parse(v);
             return m.getDirector();
             },
-                // this Serdes Config is for the kStream1 grouping (post grouping)
+                // this Serdes Config is for the directorMoviesCount grouping (post grouping)
                 Grouped.with(stringSerde, stringSerde));
 
         // post grouping, perform the count & move it to a kTable
-        KTable<String, Long> kTable = kStream1.count(Materialized.as("director-count"));
-        //KTable<String, Long> kTable = kStream1.count();
+        KTable<String, Long> directorTable = directorMoviesCount.count(Materialized.as("director-count"));
+        //KTable<String, Long> kTable = directorMoviesCount.count();
 
         // print the values in the label - "director-count"
         //kTable.toStream().print(Printed.<String, Long>toSysOut().withLabel("director-count"));
 
         // insert the KTable data to another topic
-        kTable.toStream().to( "director-count", Produced.with(stringSerde, longSerde));
+        directorTable.toStream().to( "director-count", Produced.with(stringSerde, longSerde));
+
+        
+        // Streaming to second topic
+        KGroupedStream<Integer, String> yearGroupedStream = kStream.groupBy( (k,v) -> {
+            Movies m = parser.parse(v);
+            return m.getYear();
+        }, Grouped.with(integerSerde, stringSerde));
+
+        KTable<Integer, Long> yearTable = yearGroupedStream.count(Materialized.as("year-count"));
+        yearTable.toStream().to( "year-count", Produced.with(integerSerde, longSerde));
 
     /*
-KTable<String, Long> kTable = kStream1.count();
+KTable<String, Long> kTable = directorMoviesCount.count();
 
         kTable.toStream().print(Printed.<String, Long>toSysOut().withLabel("director-count"));*/
 
