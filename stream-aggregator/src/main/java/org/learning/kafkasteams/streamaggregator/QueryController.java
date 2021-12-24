@@ -2,6 +2,7 @@ package org.learning.kafkasteams.streamaggregator;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
@@ -27,16 +28,20 @@ public class QueryController {
     public ResponseEntity<Long> director(@PathVariable String directorName
         , HttpServletRequest request){
 
-        log.info("Requested url : " + request.getRequestURI());
+        // log.info("Requested url : " + request.getRequestURI());
+        log.info("Query for Director : " + directorName);
         KafkaStreams streams = factoryBean.getKafkaStreams();
 
-        ReadOnlyKeyValueStore<String, Long> counts = streams.store(
-                StoreQueryParameters.fromNameAndType("director-count"
-                , QueryableStoreTypes.keyValueStore()));
-
+        ReadOnlyKeyValueStore<String, Long> counts = getStores(streams);
         return ResponseEntity.ok().body(counts.get(directorName));
     }
 
+
+    public ReadOnlyKeyValueStore<String, Long> getStores(KafkaStreams streams){
+        return streams.store(
+                StoreQueryParameters.fromNameAndType("director-count"
+                        , QueryableStoreTypes.keyValueStore()));
+    }
     @GetMapping("/health")
     public ResponseEntity<String> health(){
         //factoryBean.getKafkaStreams().state().isRunningOrRebalancing()
