@@ -39,6 +39,7 @@ public class AggregatorConfiguration {
         //KStream<String, Movies> kStream = builder.stream(inputTopic, Consumed.with(stringSerde, movieSerde));
 
         KGroupedStream<String, String> kStream1 = kStream.groupBy( (k, v) -> {
+            // converting the json movie data to movie object and using (returning) the director as the key
             Movies m = parser.parse(v);
             return m.getDirector();
             },
@@ -46,10 +47,14 @@ public class AggregatorConfiguration {
                 Grouped.with(stringSerde, stringSerde));
 
         // post grouping, perform the count & move it to a kTable
-        KTable<String, Long> kTable = kStream1.count();
+        KTable<String, Long> kTable = kStream1.count(Materialized.as("director-count"));
+        //KTable<String, Long> kTable = kStream1.count();
 
-        // Once
-        kTable.toStream().print(Printed.<String, Long>toSysOut().withLabel("director-count"));
+        // print the values in the label - "director-count"
+        //kTable.toStream().print(Printed.<String, Long>toSysOut().withLabel("director-count"));
+
+        // insert the KTable data to another topic
+        kTable.toStream().to( "director-count", Produced.with(stringSerde, longSerde));
 
     /*
 KTable<String, Long> kTable = kStream1.count();
