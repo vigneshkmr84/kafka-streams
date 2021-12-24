@@ -1,31 +1,50 @@
 package org.learning.kafkasteams.streamaggregator;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.kafka.streams.KafkaStreams;
 import org.apache.kafka.streams.StoreQueryParameters;
 import org.apache.kafka.streams.state.QueryableStoreTypes;
 import org.apache.kafka.streams.state.ReadOnlyKeyValueStore;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.config.StreamsBuilderFactoryBean;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class QueryController {
 
     @Autowired
     private final StreamsBuilderFactoryBean factoryBean ;//= new StreamsBuilderFactoryBean();
 
     @GetMapping("/get/{directorName}")
-    public Long director(@PathVariable String directorName){
+    public ResponseEntity<Long> director(@PathVariable String directorName
+        , HttpServletRequest request){
 
+        log.info("Requested url : " + request.getRequestURI());
         KafkaStreams streams = factoryBean.getKafkaStreams();
 
-        ReadOnlyKeyValueStore<String, Long> counts = streams.store(StoreQueryParameters.fromNameAndType("director-count"
+        ReadOnlyKeyValueStore<String, Long> counts = streams.store(
+                StoreQueryParameters.fromNameAndType("director-count"
                 , QueryableStoreTypes.keyValueStore()));
 
-        return counts.get(directorName);
+        return ResponseEntity.ok().body(counts.get(directorName));
+    }
+
+    @GetMapping("/health")
+    public ResponseEntity<String> health(){
+        //factoryBean.getKafkaStreams().state().isRunningOrRebalancing()
+        if ( !factoryBean.getKafkaStreams().state().equals(KafkaStreams.State.RUNNING) ){
+            log.info("Health-OK");
+            return ResponseEntity.ok().body("OK");
+        }else
+            return ResponseEntity.badRequest().body("Stream not yet started");
+
     }
 }
