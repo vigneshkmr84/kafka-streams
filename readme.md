@@ -48,6 +48,9 @@ Kafka Streams is a Java built API. Both Streams & KSQL DB can achieve the same o
 
 ## Application Architecure:   
 
+
+![Architecture Diagram](./images/architecture-diagram.jpg)
+
 Movie data will be POSTED with Rest-API, that are inserted into movies-dump Topic - ***producer-api*** service will be responsible for this action. 
 
 This topic will be streamed & filtered by ***stream-filter*** service. This service will filter the movies based on the IMDB rating ( good movie if rating >=7; else bad movie) 
@@ -66,7 +69,11 @@ This data is being queried back from ***stream-aggregator*** service with a REST
 ---
 
 ## NOTE
-During Stream Queries - i have observed that the below Error ``` because the stream thread is STARTING, not RUNNING```, and found that the it takes few more seconds for the stream to start properly. So, this is something that needs handling - like a State Check (health check)
+ - During Stream Queries - i have observed that the below Error ``` because the stream thread is STARTING, not RUNNING```, and found that the it takes few more seconds for the stream to start properly. So, this is something that needs handling - like a State Check (health check)
+   - To Counter this during every stream query, added this ```  if ( streams.state().toString().equalsIgnoreCase("RUNNING") ) ``` validation to ensure an active state-stream is queried.
+ - Also, during the streamed query many factors needed to be considered, like 
+   - Querying local state stores 
+   - discover and query other instances of the same app (ex: containers / ec2 instances ); because in multi-instance mode one instance is assigned a partition
 
 ## Inserting JSON Data
 
