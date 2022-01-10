@@ -48,6 +48,7 @@ Kafka Streams is a Java built API. Both Streams & KSQL DB can achieve the same o
 
 ## Application Architecure:   
 
+I've taken a simple movie data streaming as the use case. Movies data are posted by the user and it flows as per the below architecture. (Just an imaginary use case to potentially explore on the features of **Kafka Streams**)
 
 ![Architecture Diagram](./images/architecture-diagram.jpg)
 
